@@ -1,0 +1,32 @@
+{
+    "name": "thrashzone13/visitor",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Thrashzone13\\Visitor\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Reza Rabbani",
+            "email": "reza.rabbani.369@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.3@dev",
+        "squizlabs/php_codesniffer": "4.0.x-dev",
+        "friendsofphp/php-cs-fixer": "dev-master"
+    },
+    "scripts": {
+        "lint": [
+            "phpcs"
+        ],
+        "fix": [
+            "php-cs-fixer fix"
+        ]
+    }
+}
