@@ -2,45 +2,30 @@
 
 namespace Thrashzone13\Visitor;
 
-use Closure;
-use ReflectionFunction;
+use Thrashzone13\Visitor\Contracts\HandlerInterface;
+use Thrashzone13\Visitor\Exceptions\VisitorNotFoundException;
 
-class Visitor
+class Visitor implements HandlerInterface
 {
     private array $visitors = [];
 
-    private ?Closure $default = null;
-
     public function add(\Closure $closure): self
     {
-        $reflectionFunction = new ReflectionFunction($closure);
+        $reflectionFunction = new \ReflectionFunction($closure);
         $firstParameter = $reflectionFunction->getParameters()[0];
         $this->visitors[$firstParameter->getType()->getName()] = $closure;
 
         return $this;
     }
 
-    public function default(\Closure $closure): self
-    {
-        $this->default = $closure;
-
-        return $this;
-    }
-
-    public function visit(object $visitable):mixed
+    public function visit(object $visitable): mixed
     {
         $className = get_class($visitable);
 
-        if (!isset($this->visitors[$className])) {
-            if (null !== $this->default) {
-                $visitor = $this->default;
-            } else{
-                     throw new \Exception("No visitor found for $className");
-            }
-        } else {
-            $visitor = $this->visitors[$className]; 
+        if (isset($this->visitors[$className])) {
+            return $this->visitors[$className]($visitable);
         }
 
-        return $visitor($visitable);
+        throw new VisitorNotFoundException($className);
     }
 }
