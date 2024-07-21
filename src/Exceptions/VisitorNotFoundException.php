@@ -1,6 +1,7 @@
 <?php
 
 namespace Thrashzone13\Visitor\Exceptions;
+
 class VisitorNotFoundException extends \Exception
 {
     public function __construct(string $className = "")

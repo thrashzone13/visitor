@@ -1,6 +1,7 @@
 <?php
 
 namespace Thrashzone13\Visitor\Contracts;
+
 interface HandlerInterface
 {
     public function add(\Closure $closure): self;
