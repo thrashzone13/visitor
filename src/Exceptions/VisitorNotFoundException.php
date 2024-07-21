@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Thrashzone13\Visitor\Exceptions;
 
 class VisitorNotFoundException extends \Exception
