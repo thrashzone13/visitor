@@ -7,16 +7,11 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Simple implementation of visitor design
+This package provides a visitor pattern implementation.
 
-## Structure
+## Visitor Pattern
 
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-src/
-tests/
-```
+Visitor is a behavioral design pattern that lets you separate algorithms from the objects on which they operate.
 
 
 ## Install
@@ -29,33 +24,29 @@ $ composer require thrashzone13/visitor
 
 ## Usage
 
+Consider having an array of different kinds of shapes
 ``` php
-$skeleton = new thrashzone13\visitor();
-echo $skeleton->echoPhrase('Hello, League!');
+$shapes = [
+    new Circle(radius: 10),
+    new Rectangle(width: 15, height: 20),
+    new Rectangle(width: 10, height: 14),
+    new Square(side: 16)
+];
 ```
-
-## Change log
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Testing
-
-``` bash
-$ composer test
+Let's say the intention is to calculate their area and sum them up. There can be a visitor which does the calculation regarding the type of the received instance
+``` php
+$visitor = (new Visitor)
+    ->add(fn(Circle $circle) => pi() * $circle->getRadius() * $circle->getRadius())
+    ->add(fn(Square $square) => pi() * $circle->getSide() * $circle->getSide())
+    ->add(fn(Rectangle $rectangle) => pi() * $circle->getWidth() * $circle->getHeight());
 ```
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
-
-## Security
-
-If you discover any security related issues, please email reza.rabbani.369@gmail.com instead of using the issue tracker.
-
-## Credits
-
-- [Reza Rabbani][link-author]
-- [All Contributors][link-contributors]
+Now it's ready to use!
+``` php
+$totalArea = 0;
+foreach ($shapes as $shape) {
+    $totalArea += $visitor->visit($circle);
+}
+```
 
 ## License
 
