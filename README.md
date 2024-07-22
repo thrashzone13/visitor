@@ -37,8 +37,8 @@ Let's say the intention is to calculate their area and sum them up. There can be
 ``` php
 $visitor = (new Visitor)
     ->add(fn(Circle $circle) => pi() * $circle->getRadius() * $circle->getRadius())
-    ->add(fn(Square $square) => pi() * $circle->getSide() * $circle->getSide())
-    ->add(fn(Rectangle $rectangle) => pi() * $circle->getWidth() * $circle->getHeight());
+    ->add(fn(Square $square) => $square->getSide() * $square->getSide())
+    ->add(fn(Rectangle $rectangle) => $rectangle->getWidth() * $rectangle->getHeight());
 ```
 Now it's ready to use!
 ``` php
