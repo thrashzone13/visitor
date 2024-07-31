@@ -6,24 +6,46 @@ namespace Thrashzone13\Visitor;
 
 use Thrashzone13\Visitor\Contracts\HandlerInterface;
 use Thrashzone13\Visitor\Exceptions\VisitorNotFoundException;
+use Thrashzone13\Visitor\Exceptions\VisitorParameterCountException;
+use Thrashzone13\Visitor\Exceptions\VisitorParameterTypeAmbiguousException;
 
 class Visitor implements HandlerInterface
 {
     private array $visitors = [];
 
-    public function add(\Closure $closure): self
+    public function add(callable $callable): self
     {
-        $reflectionFunction = new \ReflectionFunction($closure);
-        $firstParameter = $reflectionFunction->getParameters()[0];
-        $this->visitors[$firstParameter->getType()->getName()] = $closure;
+        if (is_object($callable) && method_exists($callable, '__invoke')) {
+            $reflectionClass = new \ReflectionMethod($callable, '__invoke');
+        } else {
+            $reflectionClass = new \ReflectionFunction($callable);
+        }
+
+        if ($reflectionClass->getNumberOfParameters() !== 1) {
+            throw new VisitorParameterCountException(
+                $reflectionClass->getNumberOfParameters()
+            );
+        }
+
+        $firstParameter = $reflectionClass->getParameters()[0];
+
+        if (null === $firstParameter->getType()) {
+            throw new VisitorParameterTypeAmbiguousException();
+        }
+
+        $this->visitors[$firstParameter->getType()->getName()] = $callable;
 
         return $this;
+    }
+
+    public function getVisitors(): array
+    {
+        return $this->visitors;
     }
 
     public function visit(object $visitable): mixed
     {
         $className = get_class($visitable);
-
         if (isset($this->visitors[$className])) {
             return $this->visitors[$className]($visitable);
         }

@@ -4,24 +4,11 @@ declare(strict_types=1);
 
 namespace Thrashzone13\Visitor\Decorators;
 
-use Thrashzone13\Visitor\Contracts\DecoratorInterface;
 use Thrashzone13\Visitor\Contracts\HandlerInterface;
 
-class PreVisitDecorator implements DecoratorInterface
+class PreVisitDecorator extends AbstractVisitDecorator
 {
-    private HandlerInterface $handler;
-
     private \Closure $preVisit;
-
-    public function __construct(HandlerInterface $handler)
-    {
-        $this->handler = $handler;
-    }
-
-    public function add(\Closure $closure): HandlerInterface
-    {
-        return $this->handler->add($closure);
-    }
 
     public function setPreVisit(\Closure $preVisit): HandlerInterface
     {
