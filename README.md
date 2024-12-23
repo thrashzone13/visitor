@@ -41,7 +41,7 @@ Now it's ready to use!
 ``` php
 $totalArea = 0;
 foreach ($shapes as $shape) {
-    $totalArea += $visitor->visit($circle);
+    $totalArea += $visitor->visit($shape);
 }
 ```
 
