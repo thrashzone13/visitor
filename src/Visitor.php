@@ -33,7 +33,17 @@ class Visitor implements HandlerInterface
             throw new VisitorParameterTypeAmbiguousException();
         }
 
-        $this->visitors[$firstParameter->getType()->getName()] = $callable;
+        $firstParameterTypeName = $firstParameter->getType()->getName();
+        if (class_exists($firstParameterTypeName)) {
+            $firstParameterReflectionClass = new \ReflectionClass($firstParameterTypeName);
+            if ($firstParameterReflectionClass->getParentClass()) {
+                $this->visitors[$firstParameterReflectionClass->getParentClass()->getName()] = $callable;
+            } else {
+                $this->visitors[$firstParameterTypeName] = $callable;
+            }
+        } else {
+            $this->visitors[$firstParameterTypeName] = $callable;
+        }
 
         return $this;
     }
